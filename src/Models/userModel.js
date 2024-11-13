@@ -1,4 +1,4 @@
-const { collection, addDoc, getDocs, doc, getDoc, updateDoc  } = require("firebase/firestore");
+const { collection, setDoc, getDocs, doc, getDoc, updateDoc  } = require("firebase/firestore");
 const db = require("../../config");
 
 exports.register = async (id, name, email, password) => {
