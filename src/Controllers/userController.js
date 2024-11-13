@@ -1,13 +1,13 @@
 const userModel = require('../Models/userModel');
 
 exports.register = async (req, res) => {
-    const { name, email, password } = req.body;
-    if (!email || !name || !password) {
+    const { id, name, email, password } = req.body;
+    if (!id || !email || !name || !password) {
         return res.status(400).json({ success: false, message: 'Faltan campos requeridos' });
     }
 
     try {
-        const result = await userModel.register(name, email, password);
+        const result = await userModel.register(id, name, email, password);
         res.json({ success: true, result });
     } catch (error) {
         console.error("Error completo en register:", error);
