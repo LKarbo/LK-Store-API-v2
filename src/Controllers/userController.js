@@ -1,23 +1,26 @@
 const userModel = require('../Models/userModel');
 
-exports.register = async (req, res) => {
-    const { id, name, email, password } = req.body;
-    if (!id || !email || !name || !password) {
-        return res.status(400).json({ success: false, message: 'Faltan campos requeridos' });
-    }
-
+exports.register = async (id, name, email, password) => {
     try {
-        const result = await userModel.register(id, name, email, password);
-        res.json({ success: true, result });
-    } catch (error) {
-        console.error("Error completo en register:", error);
-        res.status(500).json({ 
-            success: false, 
-            message: 'Error al registrar el usuario',
-            error: error.message 
+        const userCollection = collection(db, "USER");
+        
+        const docRef = doc(userCollection, id);
+        
+        await setDoc(docRef, {
+            name,
+            email,
+            password,
+            phoneNumber: "",
+            address: "",
+            isAdmin: false
         });
+        
+        return { id, email, name, phoneNumber: "", address: "", isAdmin: false };
+    } catch (error) {
+        console.error("Error en registro:", error);
+        throw new Error(`Error al registrar el usuario: ${error.message}`);
     }
-};
+}
 
 exports.getAll = async (req, res) => {
     try {
