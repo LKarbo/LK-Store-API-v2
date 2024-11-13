@@ -1,9 +1,9 @@
 const { collection, addDoc, getDocs, doc, getDoc, updateDoc  } = require("firebase/firestore");
 const db = require("../../config");
 
-exports.register = async (name, email, password) => {
+exports.register = async (id, name, email, password) => {
     try {
-        const docRef = await addDoc(collection(db, "USER"), {
+        const docRef = await addDoc(collection(db, "USER", id), {
             name,
             email,
             password,
@@ -11,7 +11,7 @@ exports.register = async (name, email, password) => {
             address: "",
             isAdmin: false
         });
-        return { id: docRef.id, email, name, phoneNumber: "", address: "", isAdmin: false };
+        return { id, email, name, phoneNumber: "", address: "", isAdmin: false };
     } catch (error) {
         console.error("Error en registro:", error);
         throw new Error(`Error al registrar el usuario: ${error.message}`);
