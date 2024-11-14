@@ -1,9 +1,5 @@
 const { collection, addDoc, getDocs, doc, getDoc } = require("firebase/firestore");
 const db = require("../../config");
-const { getHamburgerById } = require("./hamburgerModel");
-const { getFriesById } = require("./friesModel");
-const { getDrinkById } = require("./drinkModel");
-const { getMenuById } = require("./menuModel");
 
 exports.createOrder = async (orderData) => {
     try {
@@ -29,22 +25,11 @@ exports.getAllorder = async () => {
         for (const doc of orderSnapshot.docs) {
             const orderData = doc.data();
             const orderItems = await Promise.all(orderData.orderData.map(async (item) => {
-                switch (item.foodType) {
-                    case "hamburger":
-                        return await getHamburgerById(item.foodID);
-                    case "fries":
-                        return await getFriesById(item.foodID);
-                    case "drink":
-                        return await getDrinkById(item.foodID);
-                    case "menu":
-                        return await getMenuById(item.foodID);
-                    default:
-                        return {
-                            foodType: item.foodType,
-                            foodID: item.foodID,
-                            foodAmount: item.foodAmount
-                        };
-                }
+                return {
+                    foodType: item.foodType,
+                    foodID: item.foodID,
+                    foodAmount: item.foodAmount
+                };
             }));
 
             console.log(orderData.user);
@@ -75,22 +60,11 @@ exports.getOrderById = async (id) => {
 
         const orderData = orderDoc.data();
         const orderItems = await Promise.all(orderData.orderData.map(async (item) => {
-            switch (item.foodType) {
-                case "hamburger":
-                    return await getHamburgerById(item.foodID);
-                case "fries":
-                    return await getFriesById(item.foodID);
-                case "drink":
-                    return await getDrinkById(item.foodID);
-                case "menu":
-                    return await getMenuById(item.foodID);
-                default:
-                    return {
-                        foodType: item.foodType,
-                        foodID: item.foodID,
-                        foodAmount: item.foodAmount
-                    };
-            }
+            return {
+                foodType: item.foodType,
+                foodID: item.foodID,
+                foodAmount: item.foodAmount
+            };
         }));
 
         return {
