@@ -9,7 +9,7 @@ exports.createSupport = async (supportData) => {
             email: supportData.email,
             fecha: new Date(),
             respuesta: "",
-            fechaRespuesta: null
+            fechaRespuesta: new Date()
         });
 
         return { id: docRef.id, ...supportData, fecha: new Date() };
