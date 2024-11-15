@@ -7,7 +7,9 @@ exports.createSupport = async (supportData) => {
             userId: supportData.userId,
             consulta: supportData.consulta,
             email: supportData.email,
-            fecha: new Date()
+            fecha: new Date(),
+            respuesta: "",
+            fechaRespuesta: null
         });
 
         return { id: docRef.id, ...supportData, fecha: new Date() };
