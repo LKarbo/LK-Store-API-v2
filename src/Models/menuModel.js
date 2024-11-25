@@ -48,15 +48,29 @@ exports.getAllMenus = async () => {
         const menus = [];
         for (const doc of snapshot.docs) {
             const menuData = doc.data();
-            const hamburger = await getHamburgerById(menuData.hamburger);
-            const fries = await getFriesById(menuData.fries);
-            const drink = await getDrinkById(menuData.drink);
+            let hamburger = null, fries = null, drink = null;
+            let totalPrice = 0;
 
-            let discountedPrice = hamburger.price + fries.price + drink.price;
+            if (menuData.hamburger && menuData.hamburger !== "") {
+                hamburger = await getHamburgerById(menuData.hamburger);
+                totalPrice += hamburger.price;
+            }
+
+            if (menuData.fries && menuData.fries !== "") {
+                fries = await getFriesById(menuData.fries);
+                totalPrice += fries.price;
+            }
+
+            if (menuData.drink && menuData.drink !== "") {
+                drink = await getDrinkById(menuData.drink);
+                totalPrice += drink.price;
+            }
+
+            let discountedPrice = totalPrice;
             if (menuData.isDiscounted && menuData.discount) {
                 const discount = await getDiscountById(menuData.discount);
                 if (discount && discount.isActive) {
-                    discountedPrice = discountedPrice * (1 - (discount.porcent / 100));
+                    discountedPrice = totalPrice * (1 - (discount.porcent / 100));
                 }
             }
 
@@ -67,7 +81,8 @@ exports.getAllMenus = async () => {
                 drink: drink,
                 isDiscounted: menuData.isDiscounted,
                 discount: menuData.discount,
-                totalPrice: hamburger.price + fries.price + drink.price,
+                img_url: menuData.img_url,
+                totalPrice: totalPrice,
                 discountedPrice: discountedPrice
             });
         }
@@ -89,15 +104,29 @@ exports.getMenuById = async (id) => {
         }
         
         const menuData = menuDoc.data();
-        const hamburger = await getHamburgerById(menuData.hamburger);
-        const fries = await getFriesById(menuData.fries);
-        const drink = await getDrinkById(menuData.drink);
+        let hamburger = null, fries = null, drink = null;
+        let totalPrice = 0;
 
-        let discountedPrice = hamburger.price + fries.price + drink.price;
+        if (menuData.hamburger && menuData.hamburger !== "") {
+            hamburger = await getHamburgerById(menuData.hamburger);
+            totalPrice += hamburger.price;
+        }
+
+        if (menuData.fries && menuData.fries !== "") {
+            fries = await getFriesById(menuData.fries);
+            totalPrice += fries.price;
+        }
+
+        if (menuData.drink && menuData.drink !== "") {
+            drink = await getDrinkById(menuData.drink);
+            totalPrice += drink.price;
+        }
+
+        let discountedPrice = totalPrice;
         if (menuData.isDiscounted && menuData.discount) {
             const discount = await getDiscountById(menuData.discount);
             if (discount && discount.isActive) {
-                discountedPrice = discountedPrice * (1 - (discount.porcent / 100));
+                discountedPrice = totalPrice * (1 - (discount.porcent / 100));
             }
         }
 
@@ -108,7 +137,7 @@ exports.getMenuById = async (id) => {
             drink: drink,
             isDiscounted: menuData.isDiscounted,
             discount: menuData.discount,
-            totalPrice: hamburger.price + fries.price + drink.price,
+            totalPrice: totalPrice,
             discountedPrice: discountedPrice
         };
     } catch (error) {

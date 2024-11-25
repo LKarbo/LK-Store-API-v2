@@ -26,9 +26,8 @@ exports.getAllFries = async () => {
         const friesList = [];
         for (const doc of snapshot.docs) {
             const friesData = doc.data();
-            let finalPrice = friesData.price;
+            let finalPrice = Number(friesData.price);
 
-            // Apply discount if applicable
             if (friesData.isDiscounted && friesData.discountId) {
                 const discount = await getDiscountById(friesData.discountId);
                 if (discount && discount.isActive) {
@@ -40,7 +39,7 @@ exports.getAllFries = async () => {
                 id: doc.id,
                 name: friesData.name,
                 originalPrice: friesData.price,
-                finalPrice: Number(finalPrice.toFixed(2)),
+                finalPrice: Math.round(finalPrice * 100) / 100,
                 img_url: friesData.img_url,
                 isDiscounted: friesData.isDiscounted,
                 discountId: friesData.discountId
@@ -66,7 +65,6 @@ exports.getFriesById = async (id) => {
         const friesData = friesDoc.data();
         let finalPrice = friesData.price;
 
-        // Apply discount if applicable
         if (friesData.isDiscounted && friesData.discountId) {
             const discount = await getDiscountById(friesData.discountId);
             if (discount && discount.isActive) {
@@ -78,7 +76,7 @@ exports.getFriesById = async (id) => {
             id: friesDoc.id,
             ...friesData,
             originalPrice: friesData.price,
-            finalPrice: Number(finalPrice.toFixed(2))
+            finalPrice: Math.round(finalPrice * 100) / 100
         };
     } catch (error) {
         console.error("Error en getFriesById:", error);
