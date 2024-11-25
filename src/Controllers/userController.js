@@ -55,12 +55,12 @@ exports.getData = async (req, res) => {
 
 exports.edit = async (req, res) => {
     const { id } = req.params;
-    const { name, email, phoneNumber, address } = req.body;
+    const { name, phoneNumber, address } = req.body;
 
-    if (!name || !email) {
+    if (!name) {
         return res.status(400).json({ 
             success: false, 
-            message: 'El nombre y email son campos requeridos' 
+            message: 'El nombre es un campo requerido' 
         });
     }
 
@@ -75,7 +75,6 @@ exports.edit = async (req, res) => {
 
         const updatedUser = await userModel.updateUser(id, {
             name,
-            email,
             phoneNumber,
             address
         });

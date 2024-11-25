@@ -74,7 +74,6 @@ exports.updateUser = async (id, userData) => {
         
         await updateDoc(userRef, {
             name: userData.name,
-            email: userData.email,
             phoneNumber: userData.phoneNumber || "",
             address: userData.address || ""
         });
