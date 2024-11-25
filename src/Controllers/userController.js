@@ -95,3 +95,34 @@ exports.edit = async (req, res) => {
         });
     }
 };
+
+exports.changeRol = async (req, res) => {
+    const { id } = req.params;
+    const { isAdmin_val } = req.body;
+
+    try {
+        const existingUser = await userModel.getUserById(id);
+        if (!existingUser) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Usuario no encontrado' 
+            });
+        }
+
+        const updatedUser = await userModel.changeRol(id,isAdmin_val);
+
+        res.json({ 
+            success: true, 
+            message: 'Usuario actualizado correctamente',
+            user: updatedUser 
+        });
+
+    } catch (error) {
+        console.error("Error completo en edit:", error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error al actualizar el usuario',
+            error: error.message 
+        });
+    }
+};

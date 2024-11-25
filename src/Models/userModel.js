@@ -87,3 +87,20 @@ exports.updateUser = async (id, userData) => {
         throw new Error(`Error al actualizar el usuario: ${error.message}`);
     }
 };
+
+exports.changeRol = async (id,isAdmin_val) => {
+    try {
+        const userRef = doc(db, "USER", id);
+        
+        await updateDoc(userRef, {
+            isAdmin: isAdmin_val
+        });
+
+        const updatedDoc = await getDoc(userRef);
+        return { id: updatedDoc.id, ...updatedDoc.data() };
+        
+    } catch (error) {
+        console.error("Error en updateUser:", error);
+        throw new Error(`Error al actualizar el usuario: ${error.message}`);
+    }
+};
